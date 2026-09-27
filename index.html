@@ -1,1 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akhil's Pixel Panic Scroll - Asset Manager & Founder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Press Start 2P', monospace;
+            background-color: #1e3a8a;
+            color: #ffffff;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            image-rendering: pixelated;
+            padding-bottom: max(24px, env(safe-area-inset-bottom));
+        }
 
+        .pixel-border {
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0px #000;
+        }
+
+        .pixel-border-gold {
+            border: 4px solid #f8b800;
+            box-shadow: 4px 4px 0px #000;
+        }
+
+        .pixel-btn {
+            background-color: #e52521;
+            border: 4px solid #000;
+            box-shadow: 0 6px 0 #990000, 0 10px 0 #000;
+            transition: all 0.1s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .pixel-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #990000, 0 6px 0 #000;
+        }
+
+        .pixel-btn-green {
+            background-color: #43b581;
+            border: 4px solid #000;
+            box-shadow: 0 6px 0 #2e7d32, 0 10px 0 #000;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .pixel-btn-green:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #2e7d32, 0 6px 0 #000;
+        }
+
+        .pixel-btn-whatsapp {
+            background-color: #25d366;
+            border: 4px solid #000;
+            box-shadow: 0 6px 0 #128c7e, 0 10px 0 #000;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .pixel-btn-whatsapp:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #128c7e, 0 6px 0 #000;
+        }
+
+        .rubber-card {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+            transform: translateY(40px) scale(0.96);
+            opacity: 0;
+        }
+        .rubber-card.visible {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        @keyframes moveClouds {
+            0% { background-position: 0 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        .retro-clouds {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="60" viewBox="0 0 100 60"><path d="M20,40 h60 v20 h-60 z M10,30 h80 v10 h-80 z" fill="%23ffffff" opacity="0.2"/></svg>');
+            animation: moveClouds 40s linear infinite;
+        }
+
+        .brick-ground {
+            background-color: #0f172a;
+            background-image: linear-gradient(30deg, #1e293b 12%, transparent 12.5%, transparent 87%, #1e293b 87.5%, #1e293b),
+                                linear-gradient(150deg, #1e293b 12%, transparent 12.5%, transparent 87%, #1e293b 87.5%, #1e293b);
+            background-size: 40px 40px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 14px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e3a8a;
+            border-left: 3px solid #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #f8b800;
+            border: 3px solid #000;
+        }
+
+        .crt::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%);
+            background-size: 100% 4px;
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        /* --- DESKTOP ARCADE CONTAINER (Approved PC View) --- */
+        .batman-arcade-container {
+            position: relative;
+            width: 100%;
+            height: 520px;
+            background-color: #000;
+            border: 4px solid #333;
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .batman-arcade-iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            pointer-events: auto;
+            transform: scale(1.25);
+            transform-origin: center;
+        }
+
+        .mobile-experience-note {
+            display: none;
+        }
+
+        /* --- MOBILE PORTRAIT & RESPONSIVE OVERRIDES (<= 768px) --- */
+        @media (max-width: 768px) {
+            body {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+            header {
+                padding: 8px 10px !important;
+            }
+            header .hidden.sm\:block {
+                display: none !important;
+            }
+            .rubber-card > div {
+                padding: 1.25rem !important;
+            }
+            
+            /* Dedicated Mobile Portrait Arcade Container */
+            .batman-arcade-container {
+                width: 100% !important;
+                height: 230px !important;
+                aspect-ratio: 16 / 9 !important;
+                margin: 0 auto;
+                background-color: #000;
+                position: relative;
+                overflow: hidden;
+                border: 4px solid #000;
+            }
+            .batman-arcade-iframe {
+                transform: none !important;
+                width: 100% !important;
+                height: 100% !important;
+                position: absolute;
+                inset: 0;
+            }
+
+            .mobile-experience-note {
+                display: block;
+            }
+        }
+
+        /* Mobile Landscape Optimization */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .batman-arcade-container {
+                height: 280px !important;
+                aspect-ratio: auto;
+            }
+        }
+    </style>
+</head>
+<body class="relative retro-clouds crt">
+
+    <div id="start-screen" class="fixed inset-0 bg-[#000000f5] z-[1000] flex flex-col items-center justify-center p-6 text-center">
+        <div class="bg-[#111] p-6 sm:p-8 pixel-border max-w-lg w-full space-y-6">
+            <div class="text-[10px] sm:text-xs text-[#f8b800] animate-pulse">WORLD 1-0 ARCADE BOOT</div>
+            <h1 class="text-lg sm:text-2xl text-[#e52521] leading-relaxed">
+                AKHIL'S PIXEL PANIC SCROLL
+            </h1>
+            <p class="text-[9px] sm:text-[10px] text-gray-300 leading-relaxed">
+                Step into the retro business empire. Click ENTER WORLD to begin your quest!
+            </p>
+            <button onclick="startGame()" class="pixel-btn px-8 py-4 text-white text-xs w-full animate-bounce">
+                ▶ ENTER WORLD
+            </button>
+        </div>
+    </div>
+
+    <div id="side-tracker" class="fixed right-2 top-24 bottom-24 w-8 hidden lg:flex flex-col items-center z-40 pointer-events-none">
+        <div class="w-2 h-full bg-[#111] border-2 border-black relative">
+            <div id="tracker-avatar" class="absolute left-[-10px] text-xl transition-all duration-75" style="top: 0%;">
+                🍄
+            </div>
+            <div id="tracker-koopa" class="absolute left-[-10px] text-xl transition-all duration-75" style="top: 10%;">
+                🐢
+            </div>
+        </div>
+    </div>
+
+    <header class="fixed top-0 left-0 w-full z-50 bg-[#000000] border-b-4 border-[#e52521] px-4 py-3 flex flex-wrap justify-between items-center text-xs shadow-xl">
+        <div class="flex items-center space-x-3 mb-1 sm:mb-0">
+            <div class="flex items-center space-x-2">
+                <span class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+                </span>
+                <span class="text-red-500 text-[10px] font-bold">LIVE</span>
+            </div>
+            <span class="text-[#f8b800] hidden md:inline text-[10px]">ASSET MANAGER & FOUNDER</span>
+        </div>
+        
+        <div class="flex-1 max-w-xs mx-4 hidden sm:block">
+            <div class="flex justify-between text-[9px] text-[#f8b800] mb-1">
+                <span>QUEST PROGRESS</span>
+                <span id="progress-percent">0%</span>
+            </div>
+            <div class="w-full bg-[#333] h-3 border-2 border-white relative overflow-hidden">
+                <div id="progress-bar" class="h-full bg-[#f8b800] w-0 transition-all duration-75"></div>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+            <div class="bg-[#222] px-2.5 py-1 border-2 border-[#f8b800] text-[#f8b800] text-[10px]">
+                COINS: <span id="coin-count">00</span>
+            </div>
+            <button id="audio-toggle" onclick="toggleAudio()" class="pixel-btn-green px-2.5 py-1 text-white text-[9px]">
+                🎵 SOUND: OFF
+            </button>
+        </div>
+    </header>
+
+    <main class="pt-28 pb-24 px-4 max-w-5xl mx-auto space-y-24 sm:space-y-32">
+        
+        <section id="hero" class="min-h-[75vh] flex flex-col justify-center items-center text-center relative pt-4">
+            <div class="bg-[#000000cc] p-6 sm:p-10 pixel-border max-w-3xl w-full flex flex-col items-center relative mb-8">
+                <div class="inline-block bg-[#e52521] px-4 py-1.5 mb-6 text-[10px] sm:text-xs border-2 border-black tracking-wider shadow-md">
+                    ASSET MANAGER & PROPERTY OWNER
+                </div>
+                <h1 class="text-xl sm:text-3xl lg:text-4xl text-[#f8b800] mb-4 leading-relaxed tracking-wide">
+                    AKHIL SINGH
+                </h1>
+                <p class="text-[11px] sm:text-xs text-[#43b581] mb-6 font-bold">
+                    Founder @ Aashray Stays
+                </p>
+                <p class="text-[11px] sm:text-sm text-gray-300 leading-relaxed mb-8 max-w-2xl">
+                    Transforming hospitality, public spaces, and home services. Owning and managing elite properties with optimal standards.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto">
+                    <a href="#properties" class="pixel-btn px-6 py-3 text-white text-[11px] w-full sm:w-auto">
+                        VIEW PROPERTIES ▼
+                    </a>
+                    <a href="https://www.linkedin.com/in/akhil-singh-502722378" target="_blank" class="pixel-btn-green px-6 py-3 text-white text-[11px] w-full sm:w-auto">
+                        LINKEDIN 🔗
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mystery Box Easter Egg -->
+            <div class="flex flex-col items-center">
+                <div onclick="hitMysteryBox()" id="mystery-box" class="w-16 h-16 bg-[#f8b800] pixel-border flex items-center justify-center text-2xl cursor-pointer hover:scale-110 transition-transform animate-pulse select-none">
+                    ?
+                </div>
+                <p id="mystery-text" class="text-[10px] text-yellow-300 mt-2">Tap Mystery Box for Secret Quest!</p>
+                <div id="mystery-reward" class="hidden mt-4 bg-black p-4 pixel-border-gold text-center animate-bounce">
+                    <div class="text-3xl mb-1">💩</div>
+                    <p class="text-[10px] text-yellow-300">SECRET 1UP! YOU FOUND A PIXEL POOP! +50 COINS!</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="properties" class="rubber-card">
+            <div class="bg-[#000000cc] p-6 sm:p-10 pixel-border">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="text-2xl">🏢</span>
+                    <h2 class="text-sm sm:text-lg text-[#f8b800] leading-snug">WORLD 1-1: PROPERTY MANAGEMENT</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="text-[11px] sm:text-sm leading-relaxed space-y-4 text-gray-200">
+                        <p>
+                            As an experienced asset manager and property owner, I specialize in acquiring, managing, and leasing high-value residential and real estate properties.
+                        </p>
+                        <p>
+                            Providing seamless tenant experiences, expert asset maintenance, and maximum efficiency across prime locations.
+                        </p>
+                    </div>
+                    <div class="bg-[#111] p-6 border-2 border-[#f8b800] text-center space-y-4">
+                        <div class="text-xs text-[#f8b800]">PORTFOLIO STATUS: ACTIVE 🌟</div>
+                        <div class="text-3xl">🏠 📈 🔑</div>
+                        <div class="text-[10px] text-gray-400">PROPERTY MANAGEMENT & LEASING</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="aashray" class="rubber-card">
+            <div class="bg-[#000000cc] p-6 sm:p-10 pixel-border">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="text-2xl">🏨</span>
+                    <h2 class="text-sm sm:text-lg text-[#f8b800] leading-snug">WORLD 1-2: AASHRAY STAYS</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-[#1a1a1a] p-6 border-2 border-white text-center space-y-4">
+                        <div class="text-xs text-[#43b581]">FOUNDER VENTURE</div>
+                        <div class="text-xl sm:text-2xl text-yellow-300">AASHRAY STAYS</div>
+                        <div class="text-[10px] text-gray-300">Hospitality & Public Spaces Redefined</div>
+                    </div>
+                    <div class="text-[11px] sm:text-sm leading-relaxed space-y-4 text-gray-200">
+                        <p>
+                            Transforming hospitality and public spaces. Aashray Stays delivers comfortable, modern, and reliable stays for travelers and professionals.
+                        </p>
+                        <p>
+                            We curate clean, welcoming environments that feel like home while maintaining operational excellence.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="fixit" class="rubber-card">
+            <div class="bg-[#000000cc] p-6 sm:p-10 pixel-border-gold">
+                <div class="flex items-center space-x-3 mb-4">
+                    <span class="text-2xl">🔧</span>
+                    <h2 class="text-sm sm:text-lg text-[#f8b800] leading-snug">WORLD 1-3: FIX IT SERVICES</h2>
+                </div>
+                <div class="bg-[#111] p-5 border-2 border-[#f8b800] mb-8 text-center space-y-3">
+                    <p class="text-[11px] text-yellow-300 font-bold">What Do You Need Fixed Today?</p>
+                    <p class="text-[10px] text-gray-300">Tap any service to connect directly on WhatsApp with pre-filled details.</p>
+                    <div>
+                        <a href="https://getfixlucknow-ship-it.github.io/now/" target="_blank" class="pixel-btn-green py-2.5 px-5 text-[10px] text-white inline-block">
+                            ⚡ VISIT GETFIX WEBSITE ➔
+                        </a>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- 1. Repairs & Maintenance -->
+                    <div class="bg-[#1a1a1a] p-5 border-2 border-white flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xs text-[#f8b800]">1. Repairs & Maintenance</h3>
+                                <span class="text-xl">⚡</span>
+                            </div>
+                            <p class="text-[10px] text-gray-300 mb-4">Troubleshooting and fixing for essential household electronics.</p>
+                        </div>
+                        <a href="https://wa.me/?text=Hi%20Akhil,%20I%20need%20Repairs%20%26%20Maintenance%20service%20from%20Fix%20It." target="_blank" class="pixel-btn-whatsapp py-2.5 px-4 text-[10px] text-white w-full">
+                            BOOK REPAIR 💬
+                        </a>
+                    </div>
+
+                    <!-- 2. Labour & Heavy Shifting -->
+                    <div class="bg-[#1a1a1a] p-5 border-2 border-white flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xs text-[#f8b800]">2. Labour & Heavy Shifting</h3>
+                                <span class="text-xl">🏋️‍♂️</span>
+                            </div>
+                            <p class="text-[10px] text-gray-300 mb-4">Reliable helpers for heavy lifting and furniture shifting.</p>
+                        </div>
+                        <a href="https://wa.me/?text=Hi%20Akhil,%20I%20need%20Labour%20%26%20Heavy%20Shifting%20service%20from%20Fix%20It." target="_blank" class="pixel-btn-whatsapp py-2.5 px-4 text-[10px] text-white w-full">
+                            BOOK HELPERS 💬
+                        </a>
+                    </div>
+
+                    <!-- 3. Home Services -->
+                    <div class="bg-[#1a1a1a] p-5 border-2 border-white flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xs text-[#f8b800]">3. Home Services</h3>
+                                <span class="text-xl">🚰</span>
+                            </div>
+                            <p class="text-[10px] text-gray-300 mb-4">Repair of plumber work/ carpenter and Chamber De-clogging</p>
+                        </div>
+                        <a href="https://wa.me/?text=Hi%20Akhil,%20I%20need%20Home%20Services%20from%20Fix%20It." target="_blank" class="pixel-btn-whatsapp py-2.5 px-4 text-[10px] text-white w-full">
+                            BOOK SERVICE 💬
+                        </a>
+                    </div>
+
+                    <!-- 4. Part-Time Driver -->
+                    <div class="bg-[#1a1a1a] p-5 border-2 border-white flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xs text-[#f8b800]">4. Part-Time Driver</h3>
+                                <span class="text-xl">🚗</span>
+                            </div>
+                            <p class="text-[10px] text-gray-300 mb-4">Experienced personal drivers for your personal vehicle on flexible terms.</p>
+                        </div>
+                        <a href="https://wa.me/?text=Hi%20Akhil,%20I%20need%20a%20Part-Time%20Driver%20from%20Fix%20It." target="_blank" class="pixel-btn-whatsapp py-2.5 px-4 text-[10px] text-white w-full">
+                            BOOK DRIVER 💬
+                        </a>
+                    </div>
+
+                    <!-- 5. Vehicle Assistance -->
+                    <div class="bg-[#1a1a1a] p-5 border-2 border-white flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xs text-[#f8b800]">5. Vehicle Assistance</h3>
+                                <span class="text-xl">🚙</span>
+                            </div>
+                            <p class="text-[10px] text-gray-300 mb-4">Doorstep minor repairs, puncture relief, and hassle-free wash dropoffs.</p>
+                        </div>
+                        <a href="https://wa.me/?text=Hi%20Akhil,%20I%20need%20Vehicle%20Assistance%20from%20Fix%20It." target="_blank" class="pixel-btn-whatsapp py-2.5 px-4 text-[10px] text-white w-full">
+                            REQUEST VEHICLE HELP 💬
+                        </a>
+                    </div>
+
+                    <!-- 6. Scrap Assistance -->
+                    <div class="bg-[#1a1a1a] p-5 border-2 border-white flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xs text-[#f8b800]">6. Scrap Assistance</h3>
+                                <span class="text-xl">♻️</span>
+                            </div>
+                            <p class="text-[10px] text-gray-300 mb-4">Connect with verified buyers for discarded household metals and scrap.</p>
+                        </div>
+                        <a href="https://wa.me/?text=Hi%20Akhil,%20I%20want%20to%20Sell%20Scrap%20via%20Fix%20It." target="_blank" class="pixel-btn-whatsapp py-2.5 px-4 text-[10px] text-white w-full">
+                            SELL SCRAP 💬
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="play-game" class="rubber-card">
+            <div class="bg-[#000000cc] p-4 sm:p-10 pixel-border text-center">
+                <div class="flex items-center justify-center space-x-3 mb-4">
+                    <span class="text-2xl">🦇</span>
+                    <h2 class="text-sm sm:text-lg text-[#f8b800]">WORLD 1-5: BATMAN DINO ARCADE</h2>
+                </div>
+                <div class="mb-4 inline-block bg-[#111] border-2 border-[#f8b800] px-3 py-2 text-[9px] sm:text-[10px] text-yellow-300 animate-pulse shadow max-w-full">
+                    💡 CLICK ON THE GAME, THEN PRESS SPACE TO START!
+                </div>
+                <div class="bg-[#181818] p-2 sm:p-4 border-4 border-black rounded-lg shadow-2xl relative max-w-4xl mx-auto mb-4">
+                    <div class="batman-arcade-container">
+                        <iframe src="https://chromedino.com/batman/embed/" class="batman-arcade-iframe" scrolling="no" title="Batman Dino Game" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center gap-3 mt-4">
+                    <a href="https://chromedino.com/batman/" target="_blank" class="pixel-btn px-6 py-3 text-white text-[10px] w-full sm:w-auto max-w-[500px]">
+                        PLAY ON FULL SCREEN 🦇
+                    </a>
+                    <div class="mobile-experience-note text-[9px] text-yellow-300 animate-pulse mt-2 leading-relaxed">
+                        🕹️ PRO-TIP: FOR THE ULTIMATE ARCADE EXPERIENCE, PLAY THIS GAME ON A PC OR LAPTOP!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="thank-you" class="rubber-card text-center py-8">
+            <div class="bg-[#000000ea] p-8 sm:p-12 pixel-border-gold">
+                <h2 class="text-base sm:text-2xl font-extrabold text-[#f8b800] leading-loose tracking-wider uppercase drop-shadow-[4px_4px_0px_#e52521]">
+                    THANK YOU FOR VISITING THE PAGE
+                </h2>
+                <p class="text-[10px] sm:text-xs text-gray-300 mt-4">
+                    STAGE CLEARED! SEE YOU AGAIN SOON! 🦇⭐
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="w-full h-16 brick-ground border-t-4 border-black flex items-center justify-center text-[10px] text-yellow-300 text-center px-4">
+        © 2026 AASHRAY STAYS & FIX IT • ALL RIGHTS RESERVED
+    </footer>
+
+    <div id="modal-overlay" class="fixed inset-0 bg-[#00000088] z-50 hidden flex items-center justify-center p-4">
+        <div id="level-complete-modal" class="bg-[#000] p-8 pixel-border-gold max-w-md w-full text-center hidden space-y-6">
+            <div class="text-lg sm:text-xl text-[#f8b800] animate-bounce">🎉 STAGE COMPLETE! 🎉</div>
+            <p class="text-[11px] sm:text-xs text-gray-200 leading-relaxed">
+                You successfully explored this retro empire! Connect on LinkedIn or book Fix It services on WhatsApp.
+            </p>
+            <button onclick="closeModal()" class="pixel-btn px-6 py-3 text-white text-xs">CONTINUE</button>
+        </div>
+    </div>
+
+    <script>
+        let audioCtx = null;
+        let isAudioEnabled = false;
+        let coinCount = 0;
+        let levelCompleteTriggered = false;
+        let mysteryBoxHit = false;
+
+        function startGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            initAudio();
+            isAudioEnabled = true;
+            document.getElementById('audio-toggle').innerText = '🎵 SOUND: ON';
+            playCoinSound();
+        }
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function toggleAudio() {
+            initAudio();
+            isAudioEnabled = !isAudioEnabled;
+            const btn = document.getElementById('audio-toggle');
+            if (isAudioEnabled) {
+                btn.innerText = '🎵 SOUND: ON';
+                playCoinSound();
+            } else {
+                btn.innerText = '🎵 SOUND: OFF';
+            }
+        }
+
+        function playTone(frequency, duration, type = 'square') {
+            if (!isAudioEnabled || !audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function playCoinSound() {
+            addCoins(1);
+            playTone(987.77, 0.08);
+            setTimeout(() => playTone(1318.51, 0.2), 80);
+        }
+
+        function addCoins(amount) {
+            coinCount += amount;
+            document.getElementById('coin-count').innerText = coinCount < 10 ? '0' + coinCount : coinCount;
+        }
+
+        function hitMysteryBox() {
+            if (mysteryBoxHit) return;
+            mysteryBoxHit = true;
+            playCoinSound();
+            addCoins(49);
+            
+            const box = document.getElementById('mystery-box');
+            box.style.backgroundColor = '#666';
+            box.style.transform = 'translateY(-15px)';
+            box.innerText = '';
+            
+            document.getElementById('mystery-text').innerText = 'SECRET UNLOCKED!';
+            document.getElementById('mystery-reward').classList.remove('hidden');
+        }
+
+        const observerOptions = { threshold: 0.15 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    playTone(300 + Math.random() * 200, 0.05);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.rubber-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercent = document.getElementById('progress-percent');
+            if (progressBar) progressBar.style.width = scrollPercent + '%';
+            if (progressPercent) progressPercent.innerText = Math.round(scrollPercent) + '%';
+
+            const trackerAvatar = document.getElementById('tracker-avatar');
+            const trackerKoopa = document.getElementById('tracker-koopa');
+            if (trackerAvatar && trackerKoopa) {
+                trackerAvatar.style.top = scrollPercent + '%';
+                trackerKoopa.style.top = Math.min(100, scrollPercent + 5) + '%';
+            }
+
+            if (scrollPercent > 95 && !levelCompleteTriggered) {
+                levelCompleteTriggered = true;
+                playCoinSound();
+                setTimeout(openLevelCompleteModal, 500);
+            }
+        });
+
+        function openLevelCompleteModal() {
+            document.getElementById('modal-overlay').classList.remove('hidden');
+            document.getElementById('level-complete-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.add('hidden');
+            document.getElementById('level-complete-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
